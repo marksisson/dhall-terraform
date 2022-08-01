@@ -1,0 +1,376 @@
+{ Type =
+    { allocation_strategy : Optional Text
+    , client_token : Optional Text
+    , excess_capacity_termination_policy : Optional Text
+    , fleet_type : Optional Text
+    , iam_fleet_role : Text
+    , id : Optional Text
+    , instance_interruption_behaviour : Optional Text
+    , instance_pools_to_use_count : Optional Natural
+    , load_balancers : Optional (List Text)
+    , on_demand_allocation_strategy : Optional Text
+    , on_demand_max_total_price : Optional Text
+    , on_demand_target_capacity : Optional Natural
+    , replace_unhealthy_instances : Optional Bool
+    , spot_price : Optional Text
+    , spot_request_state : Optional Text
+    , tags : Optional (List { mapKey : Text, mapValue : Text })
+    , tags_all : Optional (List { mapKey : Text, mapValue : Text })
+    , target_capacity : Natural
+    , target_group_arns : Optional (List Text)
+    , terminate_instances_on_delete : Optional Text
+    , terminate_instances_with_expiration : Optional Bool
+    , valid_from : Optional Text
+    , valid_until : Optional Text
+    , wait_for_fulfillment : Optional Bool
+    , launch_specification :
+        Optional
+          ( List
+              { ami : Text
+              , associate_public_ip_address : Optional Bool
+              , availability_zone : Optional Text
+              , ebs_optimized : Optional Bool
+              , iam_instance_profile : Optional Text
+              , iam_instance_profile_arn : Optional Text
+              , instance_type : Text
+              , key_name : Optional Text
+              , monitoring : Optional Bool
+              , placement_group : Optional Text
+              , placement_tenancy : Optional Text
+              , spot_price : Optional Text
+              , subnet_id : Optional Text
+              , tags : Optional (List { mapKey : Text, mapValue : Text })
+              , user_data : Optional Text
+              , vpc_security_group_ids : Optional (List Text)
+              , weighted_capacity : Optional Text
+              , ebs_block_device :
+                  Optional
+                    ( List
+                        { delete_on_termination : Optional Bool
+                        , device_name : Text
+                        , encrypted : Optional Bool
+                        , iops : Optional Natural
+                        , kms_key_id : Optional Text
+                        , snapshot_id : Optional Text
+                        , throughput : Optional Natural
+                        , volume_size : Optional Natural
+                        , volume_type : Optional Text
+                        }
+                    )
+              , ephemeral_block_device :
+                  Optional (List { device_name : Text, virtual_name : Text })
+              , root_block_device :
+                  Optional
+                    ( List
+                        { delete_on_termination : Optional Bool
+                        , encrypted : Optional Bool
+                        , iops : Optional Natural
+                        , kms_key_id : Optional Text
+                        , throughput : Optional Natural
+                        , volume_size : Optional Natural
+                        , volume_type : Optional Text
+                        }
+                    )
+              }
+          )
+    , launch_template_config :
+        Optional
+          ( List
+              { launch_template_specification :
+                  List
+                    { id : Optional Text
+                    , name : Optional Text
+                    , version : Optional Text
+                    }
+              , overrides :
+                  Optional
+                    ( List
+                        { availability_zone : Optional Text
+                        , instance_type : Optional Text
+                        , priority : Optional Natural
+                        , spot_price : Optional Text
+                        , subnet_id : Optional Text
+                        , weighted_capacity : Optional Natural
+                        , instance_requirements :
+                            Optional
+                              ( List
+                                  { accelerator_manufacturers :
+                                      Optional (List Text)
+                                  , accelerator_names : Optional (List Text)
+                                  , accelerator_types : Optional (List Text)
+                                  , bare_metal : Optional Text
+                                  , burstable_performance : Optional Text
+                                  , cpu_manufacturers : Optional (List Text)
+                                  , excluded_instance_types :
+                                      Optional (List Text)
+                                  , instance_generations : Optional (List Text)
+                                  , local_storage : Optional Text
+                                  , local_storage_types : Optional (List Text)
+                                  , on_demand_max_price_percentage_over_lowest_price :
+                                      Optional Natural
+                                  , require_hibernate_support : Optional Bool
+                                  , spot_max_price_percentage_over_lowest_price :
+                                      Optional Natural
+                                  , accelerator_count :
+                                      Optional
+                                        ( List
+                                            { max : Optional Natural
+                                            , min : Optional Natural
+                                            }
+                                        )
+                                  , accelerator_total_memory_mib :
+                                      Optional
+                                        ( List
+                                            { max : Optional Natural
+                                            , min : Optional Natural
+                                            }
+                                        )
+                                  , baseline_ebs_bandwidth_mbps :
+                                      Optional
+                                        ( List
+                                            { max : Optional Natural
+                                            , min : Optional Natural
+                                            }
+                                        )
+                                  , memory_gib_per_vcpu :
+                                      Optional
+                                        ( List
+                                            { max : Optional Natural
+                                            , min : Optional Natural
+                                            }
+                                        )
+                                  , memory_mib :
+                                      Optional
+                                        ( List
+                                            { max : Optional Natural
+                                            , min : Optional Natural
+                                            }
+                                        )
+                                  , network_interface_count :
+                                      Optional
+                                        ( List
+                                            { max : Optional Natural
+                                            , min : Optional Natural
+                                            }
+                                        )
+                                  , total_local_storage_gb :
+                                      Optional
+                                        ( List
+                                            { max : Optional Natural
+                                            , min : Optional Natural
+                                            }
+                                        )
+                                  , vcpu_count :
+                                      Optional
+                                        ( List
+                                            { max : Optional Natural
+                                            , min : Optional Natural
+                                            }
+                                        )
+                                  }
+                              )
+                        }
+                    )
+              }
+          )
+    , spot_maintenance_strategies :
+        Optional
+          ( List
+              { capacity_rebalance :
+                  Optional (List { replacement_strategy : Optional Text })
+              }
+          )
+    , timeouts :
+        Optional
+          { create : Optional Text
+          , delete : Optional Text
+          , update : Optional Text
+          }
+    }
+, default =
+  { allocation_strategy = None Text
+  , client_token = None Text
+  , excess_capacity_termination_policy = None Text
+  , fleet_type = None Text
+  , id = None Text
+  , instance_interruption_behaviour = None Text
+  , instance_pools_to_use_count = None Natural
+  , load_balancers = None (List Text)
+  , on_demand_allocation_strategy = None Text
+  , on_demand_max_total_price = None Text
+  , on_demand_target_capacity = None Natural
+  , replace_unhealthy_instances = None Bool
+  , spot_price = None Text
+  , spot_request_state = None Text
+  , tags = None (List { mapKey : Text, mapValue : Text })
+  , tags_all = None (List { mapKey : Text, mapValue : Text })
+  , target_group_arns = None (List Text)
+  , terminate_instances_on_delete = None Text
+  , terminate_instances_with_expiration = None Bool
+  , valid_from = None Text
+  , valid_until = None Text
+  , wait_for_fulfillment = None Bool
+  , launch_specification =
+      None
+        ( List
+            { ami : Text
+            , associate_public_ip_address : Optional Bool
+            , availability_zone : Optional Text
+            , ebs_optimized : Optional Bool
+            , iam_instance_profile : Optional Text
+            , iam_instance_profile_arn : Optional Text
+            , instance_type : Text
+            , key_name : Optional Text
+            , monitoring : Optional Bool
+            , placement_group : Optional Text
+            , placement_tenancy : Optional Text
+            , spot_price : Optional Text
+            , subnet_id : Optional Text
+            , tags : Optional (List { mapKey : Text, mapValue : Text })
+            , user_data : Optional Text
+            , vpc_security_group_ids : Optional (List Text)
+            , weighted_capacity : Optional Text
+            , ebs_block_device :
+                Optional
+                  ( List
+                      { delete_on_termination : Optional Bool
+                      , device_name : Text
+                      , encrypted : Optional Bool
+                      , iops : Optional Natural
+                      , kms_key_id : Optional Text
+                      , snapshot_id : Optional Text
+                      , throughput : Optional Natural
+                      , volume_size : Optional Natural
+                      , volume_type : Optional Text
+                      }
+                  )
+            , ephemeral_block_device :
+                Optional (List { device_name : Text, virtual_name : Text })
+            , root_block_device :
+                Optional
+                  ( List
+                      { delete_on_termination : Optional Bool
+                      , encrypted : Optional Bool
+                      , iops : Optional Natural
+                      , kms_key_id : Optional Text
+                      , throughput : Optional Natural
+                      , volume_size : Optional Natural
+                      , volume_type : Optional Text
+                      }
+                  )
+            }
+        )
+  , launch_template_config =
+      None
+        ( List
+            { launch_template_specification :
+                List
+                  { id : Optional Text
+                  , name : Optional Text
+                  , version : Optional Text
+                  }
+            , overrides :
+                Optional
+                  ( List
+                      { availability_zone : Optional Text
+                      , instance_type : Optional Text
+                      , priority : Optional Natural
+                      , spot_price : Optional Text
+                      , subnet_id : Optional Text
+                      , weighted_capacity : Optional Natural
+                      , instance_requirements :
+                          Optional
+                            ( List
+                                { accelerator_manufacturers :
+                                    Optional (List Text)
+                                , accelerator_names : Optional (List Text)
+                                , accelerator_types : Optional (List Text)
+                                , bare_metal : Optional Text
+                                , burstable_performance : Optional Text
+                                , cpu_manufacturers : Optional (List Text)
+                                , excluded_instance_types : Optional (List Text)
+                                , instance_generations : Optional (List Text)
+                                , local_storage : Optional Text
+                                , local_storage_types : Optional (List Text)
+                                , on_demand_max_price_percentage_over_lowest_price :
+                                    Optional Natural
+                                , require_hibernate_support : Optional Bool
+                                , spot_max_price_percentage_over_lowest_price :
+                                    Optional Natural
+                                , accelerator_count :
+                                    Optional
+                                      ( List
+                                          { max : Optional Natural
+                                          , min : Optional Natural
+                                          }
+                                      )
+                                , accelerator_total_memory_mib :
+                                    Optional
+                                      ( List
+                                          { max : Optional Natural
+                                          , min : Optional Natural
+                                          }
+                                      )
+                                , baseline_ebs_bandwidth_mbps :
+                                    Optional
+                                      ( List
+                                          { max : Optional Natural
+                                          , min : Optional Natural
+                                          }
+                                      )
+                                , memory_gib_per_vcpu :
+                                    Optional
+                                      ( List
+                                          { max : Optional Natural
+                                          , min : Optional Natural
+                                          }
+                                      )
+                                , memory_mib :
+                                    Optional
+                                      ( List
+                                          { max : Optional Natural
+                                          , min : Optional Natural
+                                          }
+                                      )
+                                , network_interface_count :
+                                    Optional
+                                      ( List
+                                          { max : Optional Natural
+                                          , min : Optional Natural
+                                          }
+                                      )
+                                , total_local_storage_gb :
+                                    Optional
+                                      ( List
+                                          { max : Optional Natural
+                                          , min : Optional Natural
+                                          }
+                                      )
+                                , vcpu_count :
+                                    Optional
+                                      ( List
+                                          { max : Optional Natural
+                                          , min : Optional Natural
+                                          }
+                                      )
+                                }
+                            )
+                      }
+                  )
+            }
+        )
+  , spot_maintenance_strategies =
+      None
+        ( List
+            { capacity_rebalance :
+                Optional (List { replacement_strategy : Optional Text })
+            }
+        )
+  , timeouts =
+      None
+        { create : Optional Text
+        , delete : Optional Text
+        , update : Optional Text
+        }
+  }
+}

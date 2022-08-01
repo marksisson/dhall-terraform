@@ -1,0 +1,231 @@
+{ Type =
+    { access_policies : Optional Text
+    , advanced_options : Optional (List { mapKey : Text, mapValue : Text })
+    , arn : Optional Text
+    , domain_id : Optional Text
+    , domain_name : Text
+    , elasticsearch_version : Optional Text
+    , endpoint : Optional Text
+    , id : Optional Text
+    , kibana_endpoint : Optional Text
+    , tags : Optional (List { mapKey : Text, mapValue : Text })
+    , tags_all : Optional (List { mapKey : Text, mapValue : Text })
+    , advanced_security_options :
+        Optional
+          ( List
+              { enabled : Bool
+              , internal_user_database_enabled : Optional Bool
+              , master_user_options :
+                  Optional
+                    ( List
+                        { master_user_arn : Optional Text
+                        , master_user_name : Optional Text
+                        , master_user_password : Optional Text
+                        }
+                    )
+              }
+          )
+    , auto_tune_options :
+        Optional
+          ( List
+              { desired_state : Text
+              , rollback_on_disable : Optional Text
+              , maintenance_schedule :
+                  Optional
+                    ( List
+                        { cron_expression_for_recurrence : Text
+                        , start_at : Text
+                        , duration : List { unit : Text, value : Natural }
+                        }
+                    )
+              }
+          )
+    , cluster_config :
+        Optional
+          ( List
+              { dedicated_master_count : Optional Natural
+              , dedicated_master_enabled : Optional Bool
+              , dedicated_master_type : Optional Text
+              , instance_count : Optional Natural
+              , instance_type : Optional Text
+              , warm_count : Optional Natural
+              , warm_enabled : Optional Bool
+              , warm_type : Optional Text
+              , zone_awareness_enabled : Optional Bool
+              , cold_storage_options :
+                  Optional (List { enabled : Optional Bool })
+              , zone_awareness_config :
+                  Optional (List { availability_zone_count : Optional Natural })
+              }
+          )
+    , cognito_options :
+        Optional
+          ( List
+              { enabled : Optional Bool
+              , identity_pool_id : Text
+              , role_arn : Text
+              , user_pool_id : Text
+              }
+          )
+    , domain_endpoint_options :
+        Optional
+          ( List
+              { custom_endpoint : Optional Text
+              , custom_endpoint_certificate_arn : Optional Text
+              , custom_endpoint_enabled : Optional Bool
+              , enforce_https : Optional Bool
+              , tls_security_policy : Optional Text
+              }
+          )
+    , ebs_options :
+        Optional
+          ( List
+              { ebs_enabled : Bool
+              , iops : Optional Natural
+              , volume_size : Optional Natural
+              , volume_type : Optional Text
+              }
+          )
+    , encrypt_at_rest :
+        Optional (List { enabled : Bool, kms_key_id : Optional Text })
+    , log_publishing_options :
+        Optional
+          ( List
+              { cloudwatch_log_group_arn : Text
+              , enabled : Optional Bool
+              , log_type : Text
+              }
+          )
+    , node_to_node_encryption : Optional (List { enabled : Bool })
+    , snapshot_options :
+        Optional (List { automated_snapshot_start_hour : Natural })
+    , timeouts :
+        Optional
+          { create : Optional Text
+          , delete : Optional Text
+          , update : Optional Text
+          }
+    , vpc_options :
+        Optional
+          ( List
+              { availability_zones : Optional (List Text)
+              , security_group_ids : Optional (List Text)
+              , subnet_ids : Optional (List Text)
+              , vpc_id : Optional Text
+              }
+          )
+    }
+, default =
+  { access_policies = None Text
+  , advanced_options = None (List { mapKey : Text, mapValue : Text })
+  , arn = None Text
+  , domain_id = None Text
+  , elasticsearch_version = None Text
+  , endpoint = None Text
+  , id = None Text
+  , kibana_endpoint = None Text
+  , tags = None (List { mapKey : Text, mapValue : Text })
+  , tags_all = None (List { mapKey : Text, mapValue : Text })
+  , advanced_security_options =
+      None
+        ( List
+            { enabled : Bool
+            , internal_user_database_enabled : Optional Bool
+            , master_user_options :
+                Optional
+                  ( List
+                      { master_user_arn : Optional Text
+                      , master_user_name : Optional Text
+                      , master_user_password : Optional Text
+                      }
+                  )
+            }
+        )
+  , auto_tune_options =
+      None
+        ( List
+            { desired_state : Text
+            , rollback_on_disable : Optional Text
+            , maintenance_schedule :
+                Optional
+                  ( List
+                      { cron_expression_for_recurrence : Text
+                      , start_at : Text
+                      , duration : List { unit : Text, value : Natural }
+                      }
+                  )
+            }
+        )
+  , cluster_config =
+      None
+        ( List
+            { dedicated_master_count : Optional Natural
+            , dedicated_master_enabled : Optional Bool
+            , dedicated_master_type : Optional Text
+            , instance_count : Optional Natural
+            , instance_type : Optional Text
+            , warm_count : Optional Natural
+            , warm_enabled : Optional Bool
+            , warm_type : Optional Text
+            , zone_awareness_enabled : Optional Bool
+            , cold_storage_options : Optional (List { enabled : Optional Bool })
+            , zone_awareness_config :
+                Optional (List { availability_zone_count : Optional Natural })
+            }
+        )
+  , cognito_options =
+      None
+        ( List
+            { enabled : Optional Bool
+            , identity_pool_id : Text
+            , role_arn : Text
+            , user_pool_id : Text
+            }
+        )
+  , domain_endpoint_options =
+      None
+        ( List
+            { custom_endpoint : Optional Text
+            , custom_endpoint_certificate_arn : Optional Text
+            , custom_endpoint_enabled : Optional Bool
+            , enforce_https : Optional Bool
+            , tls_security_policy : Optional Text
+            }
+        )
+  , ebs_options =
+      None
+        ( List
+            { ebs_enabled : Bool
+            , iops : Optional Natural
+            , volume_size : Optional Natural
+            , volume_type : Optional Text
+            }
+        )
+  , encrypt_at_rest = None (List { enabled : Bool, kms_key_id : Optional Text })
+  , log_publishing_options =
+      None
+        ( List
+            { cloudwatch_log_group_arn : Text
+            , enabled : Optional Bool
+            , log_type : Text
+            }
+        )
+  , node_to_node_encryption = None (List { enabled : Bool })
+  , snapshot_options = None (List { automated_snapshot_start_hour : Natural })
+  , timeouts =
+      None
+        { create : Optional Text
+        , delete : Optional Text
+        , update : Optional Text
+        }
+  , vpc_options =
+      None
+        ( List
+            { availability_zones : Optional (List Text)
+            , security_group_ids : Optional (List Text)
+            , subnet_ids : Optional (List Text)
+            , vpc_id : Optional Text
+            }
+        )
+  }
+}

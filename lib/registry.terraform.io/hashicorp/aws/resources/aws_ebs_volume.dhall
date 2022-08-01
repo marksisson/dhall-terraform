@@ -1,0 +1,46 @@
+{ Type =
+    { arn : Optional Text
+    , availability_zone : Text
+    , encrypted : Optional Bool
+    , final_snapshot : Optional Bool
+    , id : Optional Text
+    , iops : Optional Natural
+    , kms_key_id : Optional Text
+    , multi_attach_enabled : Optional Bool
+    , outpost_arn : Optional Text
+    , size : Optional Natural
+    , snapshot_id : Optional Text
+    , tags : Optional (List { mapKey : Text, mapValue : Text })
+    , tags_all : Optional (List { mapKey : Text, mapValue : Text })
+    , throughput : Optional Natural
+    , type : Optional Text
+    , timeouts :
+        Optional
+          { create : Optional Text
+          , delete : Optional Text
+          , update : Optional Text
+          }
+    }
+, default =
+  { arn = None Text
+  , encrypted = None Bool
+  , final_snapshot = None Bool
+  , id = None Text
+  , iops = None Natural
+  , kms_key_id = None Text
+  , multi_attach_enabled = None Bool
+  , outpost_arn = None Text
+  , size = None Natural
+  , snapshot_id = None Text
+  , tags = None (List { mapKey : Text, mapValue : Text })
+  , tags_all = None (List { mapKey : Text, mapValue : Text })
+  , throughput = None Natural
+  , type = None Text
+  , timeouts =
+      None
+        { create : Optional Text
+        , delete : Optional Text
+        , update : Optional Text
+        }
+  }
+}

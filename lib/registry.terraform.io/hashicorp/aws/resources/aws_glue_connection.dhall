@@ -1,0 +1,40 @@
+{ Type =
+    { arn : Optional Text
+    , catalog_id : Optional Text
+    , connection_properties : Optional (List { mapKey : Text, mapValue : Text })
+    , connection_type : Optional Text
+    , description : Optional Text
+    , id : Optional Text
+    , match_criteria : Optional (List Text)
+    , name : Text
+    , tags : Optional (List { mapKey : Text, mapValue : Text })
+    , tags_all : Optional (List { mapKey : Text, mapValue : Text })
+    , physical_connection_requirements :
+        Optional
+          ( List
+              { availability_zone : Optional Text
+              , security_group_id_list : Optional (List Text)
+              , subnet_id : Optional Text
+              }
+          )
+    }
+, default =
+  { arn = None Text
+  , catalog_id = None Text
+  , connection_properties = None (List { mapKey : Text, mapValue : Text })
+  , connection_type = None Text
+  , description = None Text
+  , id = None Text
+  , match_criteria = None (List Text)
+  , tags = None (List { mapKey : Text, mapValue : Text })
+  , tags_all = None (List { mapKey : Text, mapValue : Text })
+  , physical_connection_requirements =
+      None
+        ( List
+            { availability_zone : Optional Text
+            , security_group_id_list : Optional (List Text)
+            , subnet_id : Optional Text
+            }
+        )
+  }
+}

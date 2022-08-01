@@ -1,0 +1,26 @@
+{ Type =
+    { arn : Optional Text
+    , aws_device : Optional Text
+    , bandwidth : Text
+    , has_logical_redundancy : Optional Text
+    , id : Optional Text
+    , jumbo_frame_capable : Optional Bool
+    , location : Text
+    , name : Text
+    , owner_account_id : Optional Text
+    , provider_name : Optional Text
+    , tags : Optional (List { mapKey : Text, mapValue : Text })
+    , tags_all : Optional (List { mapKey : Text, mapValue : Text })
+    }
+, default =
+  { arn = None Text
+  , aws_device = None Text
+  , has_logical_redundancy = None Text
+  , id = None Text
+  , jumbo_frame_capable = None Bool
+  , owner_account_id = None Text
+  , provider_name = None Text
+  , tags = None (List { mapKey : Text, mapValue : Text })
+  , tags_all = None (List { mapKey : Text, mapValue : Text })
+  }
+}
