@@ -7,24 +7,26 @@ where
 
 import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy as B
+import Data.List.NonEmpty(NonEmpty(..))
 import Data.Map.Strict ((!), Map)
 import qualified Data.Map.Strict as M
 import Data.Maybe (fromJust, fromMaybe)
-import Data.Text (Text, pack)
-import qualified Data.Text.Prettyprint.Doc as Pretty
-import qualified Data.Text.Prettyprint.Doc.Render.Text as PrettyText
+import Data.Text (Text, pack, unpack)
+import qualified Data.Text.IO
 import Data.Version (showVersion)
 import qualified Dhall.Core as Dhall
-import Dhall.Format (Format (..), FormatMode (..), format)
+import Dhall.Format (Format (..), format)
 import qualified Dhall.Map
 import qualified Dhall.Pretty
 import qualified Dhall.Util
+import qualified GHC.IO.Encoding
 import qualified Options.Applicative as Opt
 import Paths_dhall_terraform (version)
+import qualified Prettyprinter as Pretty
+import qualified Prettyprinter.Render.Text as PrettyText
+import System.Directory
 import Terraform.Convert
 import Terraform.Types
-import qualified Turtle
-import Turtle ((</>))
 
 
 -- | Pretty print dhall expressions.
@@ -54,36 +56,39 @@ getDataSources :: Text -> ProviderSchemaRepr -> Map Text SchemaRepr
 getDataSources name schema = fromJust $ _dataSourceSchemas (_providerSchemas schema ! name)
 
 -- | Write and format a Dhall expression to a file
-writeDhall :: Turtle.FilePath -> Expr -> IO ()
+writeDhall :: FilePath -> Expr -> IO ()
 writeDhall filepath expr = do
-  putStrLn $ "Writing file '" <> Turtle.encodeString filepath <> "'"
-  Turtle.writeTextFile filepath $ pretty expr <> "\n"
+  putStrLn $ "Writing file '" <> filepath <> "'"
+  Data.Text.IO.writeFile filepath $ pretty expr <> "\n"
   format
     ( Format
-        { characterSet = Dhall.Pretty.ASCII,
-          censor       = Dhall.Util.NoCensor,
-          formatMode   = Dhall.Format.Modify (Dhall.Util.InputFile $ Turtle.encodeString filepath)
+        { chosenCharacterSet = Just Dhall.Pretty.Unicode,
+          censor             = Dhall.Util.NoCensor,
+          outputMode         = Dhall.Util.Write,
+          transitivity       = Dhall.Util.Transitive,
+          inputs             = Dhall.Util.InputFile filepath :| []
         }
     )
 
 -- | Generate a completion record for the resource.
-mkRecord :: Turtle.FilePath -> Text -> BlockRepr -> IO ()
+mkRecord :: FilePath -> Text -> BlockRepr -> IO ()
 mkRecord rootPath name block = do
-  let recordPath = rootPath </> Turtle.fromText (name <> ".dhall")
+  let recordPath = rootPath <> "/" <> unpack (name <> ".dhall")
   let record =
         Dhall.RecordLit $
+        Dhall.makeRecordField <$>
           Dhall.Map.fromList
             [ ("Type", mkBlockType block),
               ("default", mkBlockDefault block)
             ]
-  Turtle.mktree rootPath
+  createDirectoryIfMissing True rootPath
   writeDhall recordPath record
   where
     mkBlockType :: BlockRepr -> Expr
-    mkBlockType b = Dhall.Record $ Dhall.Map.fromList (typeAttrs b <> typeNested b)
+    mkBlockType b = Dhall.Record $ Dhall.makeRecordField <$> Dhall.Map.fromList (typeAttrs b <> typeNested b)
 
     mkBlockDefault :: BlockRepr -> Expr
-    mkBlockDefault b = Dhall.RecordLit $ Dhall.Map.fromList (defAttrs b <> defNested b)
+    mkBlockDefault b = Dhall.RecordLit $ Dhall.makeRecordField <$> Dhall.Map.fromList (defAttrs b <> defNested b)
 
     defAttrs  = attrs toDefault
     typeAttrs = attrs Just
@@ -103,7 +108,7 @@ mkRecord rootPath name block = do
         $ M.mapMaybe mapExpr
         $ M.map nestedToType (fromMaybe noNestedBlocks $ _blockTypes b)
 
-generate :: Turtle.FilePath -> Map Text SchemaRepr -> IO ()
+generate :: FilePath -> Map Text SchemaRepr -> IO ()
 generate rootDir schemas =
   mapM_
     (uncurry (mkRecord rootDir))
@@ -154,14 +159,16 @@ opts =
 
 main :: IO ()
 main = do
+  GHC.IO.Encoding.setLocaleEncoding GHC.IO.Encoding.utf8
+
   parsedOpts <- Opt.execParser opts
 
-  let outputDir      = Turtle.fromText $ pack $ optOutputDir parsedOpts
+  let outputDir      = optOutputDir parsedOpts
       providerName   = pack $ optProviderName parsedOpts
-      mainDir        = outputDir </> Turtle.fromText providerName
-      providerDir    = mainDir </> Turtle.fromText "provider"
-      resourcesDir   = mainDir </> Turtle.fromText "resources"
-      dataSourcesDir = mainDir </> Turtle.fromText "data_sources"
+      mainDir        = outputDir <> "/" <> unpack providerName
+      providerDir    = mainDir <>  "/" <>unpack "provider"
+      resourcesDir   = mainDir <>  "/" <>unpack "resources"
+      dataSourcesDir = mainDir <>  "/" <>unpack "data_sources"
 
   doc <- readSchemaFile (optSchemaFile parsedOpts)
 

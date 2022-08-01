@@ -1,18 +1,17 @@
 cabal-version:       2.0
 name:                dhall-terraform
-version:             0.1.0
+version:             0.2.0
 synopsis:            Creates Terraform resources using Dhall
 description:         Generate Dhall types for an arbitrary Terraform provider using the provider schema.
-license:             UNLICENSE
-license-file:        UNLICENSE
-author:              Konstantinos Sideris
-maintainer:          siderisk@auth.gr
-copyright:           2019 Konstantinos Sideris
+license:             MIT
+license-file:        LICENSE
+author:              Mark Sisson
+maintainer:          mark@sisson.io
+copyright:           2022 Mark Sisson
 category:            Utility
 build-type:          Simple
 extra-doc-files:     README.md
-                   , CHANGELOG.md
-tested-with:         GHC == 8.6.5
+tested-with:         GHC == 9.0.2
 
 library
   hs-source-dirs:      src
@@ -20,13 +19,14 @@ library
                      , Terraform.Convert
 
 
-  build-depends:       base                ^>= 4.12.0.0
+  build-depends:       base                ^>= 4.15.0.0
                      , aeson
                      , aeson-casing
                      , text
                      , containers
+                     , directory
                      , split
-                     , dhall                >= 1.27 && < 1.28
+                     , dhall                >= 1.41.0
                      , turtle
 
   ghc-options:         -Wall
@@ -46,12 +46,13 @@ executable dhall-terraform
   main-is:             Main.hs
   other-modules:       Paths_dhall_terraform
 
-  build-depends:       base ^>= 4.12.0.0
+  build-depends:       base ^>= 4.15.0.0
                      , dhall-terraform
                      , optparse-applicative
                      , bytestring
                      , aeson
-                     , dhall                >= 1.27 && < 1.28
+                     , directory
+                     , dhall                >= 1.41.0
                      , prettyprinter
                      , containers
                      , text
@@ -78,7 +79,7 @@ test-suite dhall-terraform-test
   hs-source-dirs:      test
   main-is:             Spec.hs
 
-  build-depends:       base ^>= 4.12.0.0
+  build-depends:       base ^>= 4.15.0.0
                      , dhall-terraform
 
 

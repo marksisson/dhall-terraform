@@ -12,6 +12,7 @@ module Terraform.Convert
   )
 where
 
+import qualified Data.Bifunctor
 import qualified Data.Map.Strict as Sm
 import Data.Maybe (fromMaybe)
 import Data.Text (Text)
@@ -26,9 +27,13 @@ toDefault e = case e of
         valueForField = \case
           (Dhall.App Dhall.Optional t) -> Just $ Dhall.App Dhall.None t
           _ -> Nothing
+
+        kvs' = Dhall.Map.mapMaybe (Just . Dhall.recordFieldValue) kvs
+
+        adaptRecordMap = Dhall.Map.mapMaybe (Just . Dhall.makeRecordField)
      in Just
           $ Dhall.RecordLit
-          $ Dhall.Map.mapMaybe valueForField kvs
+          $ adaptRecordMap (Dhall.Map.mapMaybe valueForField kvs')
   (Dhall.App Dhall.Optional t) -> Just $ Dhall.App Dhall.None t
   _ -> Nothing
 
@@ -44,7 +49,7 @@ nestedToType blk =
     checkOpt ty = case _minItems blk of
       (Just n) | n > 0 -> ty
       _                -> Dhall.App Dhall.Optional ty
-    theRecord = Dhall.Record $ Dhall.Map.fromList (attrs <> nested)
+    theRecord = Dhall.Record $ Dhall.makeRecordField <$> Dhall.Map.fromList (attrs <> nested)
     attrs     = Sm.toList $ Sm.map attrToType (fromMaybe noAttrs $ _attributes $ _block blk)
     nested    = Sm.toList $ Sm.map nestedToType (fromMaybe noNestedBlocks $ _blockTypes $ _block blk)
 
@@ -57,11 +62,11 @@ attrToType attr = if isReq then toType (_attrType attr)
 
 -- | Empty map in case there are no attributes defined.
 noAttrs :: Sm.Map Text Attribute
-noAttrs = Sm.fromList []
+noAttrs = Sm.empty
 
 -- | Empty map in case there are not nested blocks.
 noNestedBlocks :: Sm.Map Text BlockType
-noNestedBlocks = Sm.fromList []
+noNestedBlocks = Sm.empty
 
 -- | Converts a Terraform type to a Dhall expression.
 toType :: AttributeType -> Expr
@@ -71,17 +76,20 @@ toType (Lit "bool") = Dhall.Bool
 toType (Cont ("map", "number")) =
   Dhall.App Dhall.List
     $ Dhall.Record
-    $ Dhall.Map.fromList
+    $ Dhall.makeRecordField
+    <$> Dhall.Map.fromList
       [("mapKey", Dhall.Text), ("mapValue", Dhall.Natural)]
 toType (Cont ("map", "bool")) =
   Dhall.App Dhall.List
     $ Dhall.Record
-    $ Dhall.Map.fromList
+    $ Dhall.makeRecordField
+    <$> Dhall.Map.fromList
       [("mapKey", Dhall.Text), ("mapValue", Dhall.Bool)]
 toType (Cont ("map", "string")) =
   Dhall.App Dhall.List
     $ Dhall.Record
-    $ Dhall.Map.fromList
+    $ Dhall.makeRecordField
+    <$> Dhall.Map.fromList
       [("mapKey", Dhall.Text), ("mapValue", Dhall.Text)]
 toType (Cont ("set", "number")) = Dhall.App Dhall.List Dhall.Natural
 toType (Cont ("list", "number")) = Dhall.App Dhall.List Dhall.Natural
@@ -93,7 +101,8 @@ toType (Comb ("set", ts)) = case ts of
   [Lit "map", Lit "string"] ->
     Dhall.App Dhall.List
       $ Dhall.Record
-      $ Dhall.Map.fromList [("mapKey", Dhall.Text), ("mapValue", Dhall.Text)]
+      $ Dhall.makeRecordField
+      <$> Dhall.Map.fromList [("mapKey", Dhall.Text), ("mapValue", Dhall.Text)]
   _ -> error $ "missing case: " <> show ts
 toType (Comb ("list", ts)) = case ts of
   [t] -> Dhall.App Dhall.List (toType t)
@@ -101,11 +110,13 @@ toType (Comb ("list", ts)) = case ts of
   [Lit "map", Lit "string"] ->
     Dhall.App Dhall.List
       $ Dhall.Record
-      $ Dhall.Map.fromList [("mapKey", Dhall.Text), ("mapValue", Dhall.Text)]
+      $ Dhall.makeRecordField
+      <$> Dhall.Map.fromList [("mapKey", Dhall.Text), ("mapValue", Dhall.Text)]
+  [Lit "list", Lit "number"] -> Dhall.App Dhall.List Dhall.Natural
   _ -> error $ "missing case: " <> show ts
 toType (Obj m) =
   Dhall.Record
-    ( Dhall.Map.fromList
-        (map (\(k, v) -> (k, toType v)) (Sm.toList m))
+    $ Dhall.makeRecordField <$> Dhall.Map.fromList
+        (map (Data.Bifunctor.second toType) (Sm.toList m)
     )
 toType t = error $ "missing type definition: " <> show t
