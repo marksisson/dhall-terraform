@@ -1,3 +1,8 @@
-provider "azurerm" {
-  version = "=1.37.0"
+terraform {
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+      version = "~> 3.16"
+    }
+  }
 }
